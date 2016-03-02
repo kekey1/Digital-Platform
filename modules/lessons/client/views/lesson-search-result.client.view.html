@@ -1,0 +1,36 @@
+<div>
+  <div class="panel" data-category="transition">
+    <div class="panel-heading" ng-class="returnHeaderClass(unit)">
+      <!-- TODO: set up colors for each unit -->
+      <!-- <span class="pull-right">{{lesson.lessonOverview.grade}}</span> -->
+      <span class="pull-right">{{classPeriod}}</span>
+      <h3 class="panel-title">
+        <!-- TODO: set up icons for each unit -->
+        <i class="glyphicon glyphicon-tint"></i> {{unit}}
+      </h3>
+    </div>
+    <div class="panel-body">
+      <small>{{setting}}</small>
+      <h4>{{title}}</h4>
+      <p ng-bind-html="summary | sanitize"></p>
+    </div>
+    <div class="panel-footer">
+      <div class="pull-left">
+        <small>{{unit}}</small>
+      </div>
+      <div class="pull-right">
+        <!-- TODO: This needs to be fixed in the model vm.lesson.lessonOverview.subjectAreas -->
+        <div class="btn-group" uib-dropdown is-open="status.isopen">
+          <button id="single-button" type="button" class="btn" uib-dropdown-toggle ng-disabled="disabled">
+            <span ng-if="subjectAreas.length == 1">{{subjectAreas.length}} Subject</span>
+            <span ng-if="subjectAreas.length > 1">{{subjectAreas.length}} Subjects</span>
+            <span class="caret"></span>
+          </button>
+          <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
+            <li role="menuitem" ng-repeat="subject in subjectAreas"><a>{{subject}}</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

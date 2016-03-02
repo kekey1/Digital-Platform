@@ -4,7 +4,7 @@
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span><!-- TODO: Need to wire up search -->
             </span>
-            <input type="text" class="form-control" placeholder="Search for a Lesson, Unit, or Subject...">
+            <input type="text" class="form-control" placeholder="Search for a Lesson, Unit, or Subject..." ng-model="searchItem" ng-change="searchBackend()">
         </div>
         <h1>Curriculum <small>Lessons</small></h1>
     </div>
@@ -45,8 +45,10 @@
                                 <li><a ok-sel=".economics">Economics</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a ok-sel=".englishlanguagearts">English Language Arts</a></li>
-                                <li><a ok-sel=".music">Music</a></li>
-                                <li><a ok-sel=".music">Art</a></li>
+                                <li><a ng-click="filterObjectToggle('subjectAreas', 'Music')">Music</a></li>
+                                <li><a ng-click="filterObjectToggle('subjectAreas', 'Art')">Art</a></li>
+                                <li><a ng-click="filterObjectToggle('subjectAreas', 'Arithmetic')">Arithmetic</a></li>
+                                <li ng-click="filterObjectToggle('subjectAreas', 'Band')"><a >Band</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -74,37 +76,31 @@
                     </ul>
                 </div>
             </div>
+            <div class="pull-right">
+              <span ng-show="lessons.length > 0">{{lessons.length}} Lessons Found</span>
+              <span ng-show="!lessons || lessons.length < 1">No Lessons Found</span>
+            </div>
         </div>
+        <small>Your Filter:</small></br>
+        <small ng-show="!searchItem">NO FILTERS SELECTED</small>
+        <small ng-show="searchItem">SELECT lessons</small></br>
+        <small ng-show="searchItem">WHERE title like '{{searchItem}}'</small>
     </nav>
 
 
-
-
     <div class="row" isotope-container="isotope-container">
-        <div ng-repeat="lesson in vm.lessons" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item {{lesson.lessonOverview.setting}} {{lesson.lessonUpload.unit}}">
-            <div class="panel" data-category="transition" ui-sref="lessons.view({ lessonId: lesson._id })">
-                <div class="panel-heading unit-red">
-                    <!-- TODO: set up colors for each unit -->
-                    <span class="pull-right">{{lesson.lessonOverview.grade}}</span>
-                    <h3 class="panel-title">
-                        <!-- TODO: set up icons for each unit -->
-                        <i class="glyphicon glyphicon-tint"></i>
-                        {{lesson.lessonUpload.unit}}
-                    </h3>
-                </div>
-                <div class="panel-body">
-                    <small>{{lesson.lessonOverview.setting}}</small>
-                    <h4>{{lesson.lessonUpload.title}}</h4>
-                    <p ng-bind-html="lesson.lessonOverview.lessonSummary | sanitize"></p>
-                </div>
-                <div class="panel-footer">
-                    <!-- TODO: This needs to be fixed in the model vm.lesson.lessonOverview.subjectAreas -->
-                    <span class="label label-science">Science</span>
-                    <span class="label label-science">Oceanography</span>
-                    <span class="label label-science">Marine Biology</span>
-                </div>
-            </div>
-        </div>
+      <div ng-repeat="lesson in lessons" isotope-item="isotope-item" class="col-sm-6 col-md-4 col-lg-3 library-item">
+
+      <library-search-result
+        title="{{lesson.lessonUpload.title}}"
+        class-period="{{lesson.lessonOverview.grade}}"
+        setting="{{lesson.lessonOverview.setting}}"
+        unit="{{lesson.lessonUpload.unit}}"
+        summary="{{lesson.lessonOverview.lessonSummary}}"
+        subject-areas="lesson.lessonOverview.subjectAreas"
+        >
+      </library-search-result>
+    </div>
         <div class="col-sm-6 col-md-4 col-lg-3 library-item" isotope-item="isotope-item">
             <div class="panel panel-default" ui-sref="lessons.create">
                 <div class="panel-body text-center text-muted">

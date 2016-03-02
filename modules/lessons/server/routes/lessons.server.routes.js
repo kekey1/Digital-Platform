@@ -6,7 +6,11 @@
 var lessonsPolicy = require('../policies/lessons.server.policy'),
   lessons = require('../controllers/lessons.server.controller');
 
-module.exports = function (app) {
+module.exports = function(app) {
+  //search route
+  app.route('/api/lessons/search')
+    .get(lessons.search);
+
   // Lessons collection routes
   app.route('/api/lessons').all(lessonsPolicy.isAllowed)
     .get(lessons.list)

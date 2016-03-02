@@ -87,7 +87,7 @@ exports.update = function(req, res) {
   }
 };
 
-/** 
+/**
  * Delete a lesson
  */
 exports.delete = function(req, res) {
@@ -104,7 +104,7 @@ exports.delete = function(req, res) {
   });
 };
 
-/** 
+/**
  * List of lessons
  */
 exports.list = function(req, res) {
@@ -141,4 +141,41 @@ exports.lessonByID = function(req, res, next, id) {
     req.lesson = lesson;
     next();
   });
+};
+
+/**
+ * search Unit and Lesson
+ */
+exports.search = function(req, res) {
+  var filters = JSON.parse(decodeURI(req.query.filters));
+  // console.log(filters);
+  var sendObject = {};
+
+  var searchString = String(req.query.textSearch);
+
+  var baseQuery = { 'lessonUpload.title': new RegExp(searchString, 'i') };
+  // console.log(filters.subjectAreas.length);
+  if(filters.subjectAreas.length === 1){
+    // baseQuery.push({'lessonOverview.subjectAreas': filters.subjectAreas[0]});
+    baseQuery['lessonOverview.subjectAreas'] = filters;
+    console.log(baseQuery);
+  }
+  if(filters.subjectAreas.length > 1){
+    // baseQuery.push({'lessonOverview.subjectAreas': filters.subjectAreas[0]});
+    baseQuery['lessonOverview.subjectAreas'] = filters;
+  }
+  Lesson.find(baseQuery)
+    .exec(function(err, results) {
+      if (err) {
+        return res.status(500).json({
+          error: 'Cannot list the lessons'
+        });
+      }
+      if (results === null || results[0] === null) {
+        return res.send(400);
+      }
+      console.log('here');
+      res.json(results);
+    });
+
 };

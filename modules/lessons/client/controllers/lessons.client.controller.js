@@ -16,7 +16,7 @@
     vm.form = {};
 
     vm.subjectAreas = [
-     { type: 'Science', name: 'Ecology', value: 'ecology' }, 
+     { type: 'Science', name: 'Ecology', value: 'ecology' },
      { type: 'Science', name: 'Geology and Earth Science', value: 'geologyeatchscience' },
      { type: 'Science', name: 'Limnology', value: 'limnology' },
      { type: 'Science', name: 'Marine Biology', value: 'marinebio' },
