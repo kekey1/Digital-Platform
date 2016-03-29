@@ -13,8 +13,11 @@ acl = new acl(new acl.memoryBackend());
  */
 exports.invokeRolesPolicies = function () {
   acl.allow([{
-    roles: ['team member', 'team lead', 'user'],
+    roles: ['team member'],
     allows: [{
+      resources: '/api/protocol-site-conditions',
+      permissions: '*'
+    }, {
       resources: '/api/protocol-site-conditions/:siteConditionId/upload-water-condition',
       permissions: '*'
     }, {
@@ -23,9 +26,18 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/protocol-site-conditions/:siteConditionId',
       permissions: '*'
+    }]
+  }, {
+    roles: ['team lead'],
+    allows: [{
+      resources: '/api/protocol-site-conditions/:siteConditionId/upload-water-condition',
+      permissions: ['post']
     }, {
-      resources: '/api/protocol-site-conditions',
-      permissions: '*'
+      resources: '/api/protocol-site-conditions/:siteConditionId/upload-land-condition',
+      permissions: ['post']
+    }, {
+      resources: '/api/protocol-site-conditions/:siteConditionId',
+      permissions: ['get', 'put']
     }]
   }, {
     roles: ['admin', 'partner', 'guest'],
@@ -41,6 +53,11 @@ exports.invokeRolesPolicies = function () {
  */
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
+
+  // If a protocol site condition is being processed and the current user created it then allow any manipulation
+  if (req.siteCondition && req.user && req.siteCondition.user && req.siteCondition.user.id === req.user.id) {
+    return next();
+  }
 
   // Check for user roles
   acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {

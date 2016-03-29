@@ -7,37 +7,24 @@
 </div>
 <section class="content">
     <section class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="pull-right">
-                    <a class="btn btn-primary" ui-sref="units.edit({ unitId: vm.unit._id })">Edit</a>
-                    <a class="btn btn-default" data-toggle="modal" data-target="#modal-download">Download</a>
-                </div>
-                <p class="text-muted">
-                    Posted on
-                    <span ng-bind="vm.unit.created | date:'mediumDate'"></span>
-                    by
-                    <span ng-if="vm.unit.user" ng-bind="vm.unit.user.displayName"></span>
-                    <span ng-if="!vm.unit.user">Deleted User</span>
-                </p>
-            </div>
+        <div class="pull-right">
+            <a class="btn btn-primary" ui-sref="units.edit({ unitId: vm.unit._id })">
+              <i class="glyphicon glyphicon-edit"></i>
+            </a>
+            <a class="btn btn-primary" ng-click="vm.remove()">
+              <i class="glyphicon glyphicon-trash"></i>
+            </a>
         </div>
-        <br>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="well">
-                    <ul class="row list-unstyled"><!--TODO: Wire up list/links of lessons inside the unit-->
-                        <li class="col-md-4"><a href="#">How to indentify a tree</a></li>
-                        <li class="col-md-4"><a href="#">How to plant a tree</a></li>
-                        <li class="col-md-4"><a href="#">How to water a tree</a></li>
-                        <li class="col-md-4"><a href="#">How to indentify a tree</a></li>
-                        <li class="col-md-4"><a href="#">How to plant a tree</a></li>
-                        <li class="col-md-4"><a href="#">How to water a tree</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        
+        <small>
+            <em class="text-muted">
+                Posted on
+                <span ng-bind="vm.unit.created | date:'mediumDate'"></span>
+                by
+                <span ng-if="vm.unit.user" ng-bind="vm.unit.user.displayName"></span>
+                <span ng-if="!vm.unit.user">Deleted User</span>
+            </em>
+        </small>
+
         <div class="page-header">
             <h2>Stage 1: Desired Results</h2>
         </div>
@@ -67,13 +54,19 @@
         <p ng-bind-html="vm.unit.stageOne.acquisition.content.field | sanitize"></p>
 
         <b>Science Lessons</b>
-        <p ng-bind-html="vm.unit.stageOne.acquisition.lessons.science | sanitize"></p>
+        <ul ng-repeat="scienceLesson in vm.unit.stageOne.acquisition.lessons.science">
+            <li ng-bind="scienceLesson | scienceLessons"></li>
+        </ul>
 
         <b>Math Lessons</b>
-        <p ng-bind-html="vm.unit.stageOne.acquisition.lessons.math | sanitize"></p>
+        <ul ng-repeat="mathLesson in vm.unit.stageOne.acquisition.lessons.math">
+            <li ng-bind="mathLesson | mathLessons"></li>
+        </ul>
 
         <b>Field Lessons</b>
-        <p ng-bind-html="vm.unit.stageOne.acquisition.lessons.field | sanitize"></p>
+        <ul ng-repeat="fieldLesson in vm.unit.stageOne.acquisition.lessons.field">
+            <li ng-bind="fieldLesson | fieldLessons"></li>
+        </ul>
 
         <div class="page-header">
             <h2>Stage 2: Evidence</h2>
@@ -99,50 +92,3 @@
 
     </section>
 </section>
-
-
-
-<!--MODALS-->
-<div class="modal fade" id="modal-download" tabindex="-1" role="dialog"><!--Wire up modal-->
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Download <span class="red">{{vm.unit.title}}</span></h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <div class="checkbox"><!--TODO: Pull in all lesson names inside the unit-->
-                                <label><input type="checkbox" value="" checked> Lesson #1</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="" checked> Lesson #2</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="" checked> Lesson #3</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="" checked> Lesson #4</label>
-                            </div>
-                            <hr/>
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="" checked> Include all Handouts</label>
-                            </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="" checked> Include all Teacher Resources</label>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Download</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!--END MODALS-->

@@ -5,6 +5,7 @@
  */
 var path = require('path'),
   fs = require('fs'),
+  path = require('path'),
   mongoose = require('mongoose'),
   ProtocolSiteCondition = mongoose.model('ProtocolSiteCondition'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
@@ -22,10 +23,6 @@ var emptyString = function(string) {
 };
 
 var validateSiteCondition = function(siteCondition, successCallback, errorCallback) {
-  if (!siteCondition.recentRainfall.rainedIn24Hours) siteCondition.recentRainfall.rainedIn24Hours = false;
-  if (!siteCondition.recentRainfall.rainedIn72Hours) siteCondition.recentRainfall.rainedIn72Hours = false;
-  if (!siteCondition.recentRainfall.rainedIn7Days) siteCondition.recentRainfall.rainedIn7Days = false;
-
   var errorMessages = [];
 
   if (siteCondition.tideConditions.closestHighTide && !moment(siteCondition.tideConditions.closestHighTide, 'MM-DD-YYYY HH:mm').isValid()) {
@@ -129,7 +126,7 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
   if (errorMessages.length > 0) {
     errorCallback(errorMessages);
   } else {
-    successCallback(siteCondition);
+    successCallback();
   }
 };
 
@@ -138,8 +135,8 @@ var validateSiteCondition = function(siteCondition, successCallback, errorCallba
  */
 exports.create = function (req, res) {
   validateSiteCondition(req.body, 
-  function(siteConditionJSON) {
-    var siteCondition = new ProtocolSiteCondition(siteConditionJSON);
+  function() {
+    var siteCondition = new ProtocolSiteCondition(req.body);
     siteCondition.tideConditions.closestHighTide = 
       moment(req.body.tideConditions.closestHighTide, 'MM-DD-YYYY HH:mm').toDate();
     siteCondition.tideConditions.closestLowTide = 
@@ -168,7 +165,7 @@ exports.read = function (req, res) {
   // convert mongoose document to JSON
   var siteCondition = req.siteCondition ? req.siteCondition.toJSON() : {};
   siteCondition.tideConditions.closestHighTide = moment(siteCondition.tideConditions.closestHighTide).format('MM-DD-YYYY HH:mm');
-  siteCondition.tideConditions.closestLowTide = moment(siteCondition.tideConditions.closestLowTide).format('MM-DD-YYYY HH:mm');
+    siteCondition.tideConditions.closestLowTide = moment(siteCondition.tideConditions.closestLowTide).format('MM-DD-YYYY HH:mm');
 
   res.json(siteCondition);
 };
@@ -178,15 +175,11 @@ exports.read = function (req, res) {
  */
 exports.update = function (req, res) {
   validateSiteCondition(req.body, 
-  function(siteConditionJSON) {
+  function() {
     var siteCondition = req.siteCondition;
 
     if (siteCondition) {
-      siteCondition = _.extend(siteCondition, siteConditionJSON);
-      siteCondition.tideConditions.closestHighTide = 
-        moment(req.body.tideConditions.closestHighTide, 'MM-DD-YYYY HH:mm').toDate();
-      siteCondition.tideConditions.closestLowTide = 
-        moment(req.body.tideConditions.closestLowTide, 'MM-DD-YYYY HH:mm').toDate();
+      siteCondition = _.extend(siteCondition, req.body);
 
       siteCondition.save(function (err) {
         if (err) {
@@ -196,10 +189,6 @@ exports.update = function (req, res) {
         } else {
           res.json(siteCondition);
         }
-      });
-    } else {
-      return res.status(400).send({
-        message: 'Protocol site condition not found'
       });
     }
   }, function(errorMessages) {
@@ -332,7 +321,7 @@ exports.siteConditionByID = function (req, res, next, id) {
     });
   }
 
-  ProtocolSiteCondition.findById(id).populate('teamLead', 'displayName').exec(function (err, siteCondition) {
+  ProtocolSiteCondition.findById(id).populate('user', 'displayName').exec(function (err, siteCondition) {
     if (err) {
       return next(err);
     } else if (!siteCondition) {

@@ -8,20 +8,12 @@
   TeamsService.$inject = ['$resource'];
 
   function TeamsService($resource) {
-    return {
-      all: $resource('api/teams/:teamId', {
-        teamId: '@_id'
-      }, {
-        update: {
-          method: 'PUT'
-        }
-      }),
-      owner: $resource('api/team', { 
-      }, {
-        update: {
-          method: 'PUT'
-        }
-      })
-    };
+    return $resource('api/teams/:teamId', {
+      teamId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
   }
 })();

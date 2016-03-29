@@ -18,8 +18,9 @@
         url: '',
         templateUrl: 'modules/protocol-site-conditions/client/views/protocol-site-conditions.client.view.html',
         controller: 'ProtocolSiteConditionsMainController',
-        controllerAs: 'sc',
+        controllerAs: 'vm',
         data: {
+          roles: ['team lead', 'team member', 'admin'],
           pageTitle: 'Protocol Site Conditions'
         }
       })
@@ -27,7 +28,7 @@
         url: '/create',
         templateUrl: 'modules/protocol-site-conditions/client/views/form-protocol-site-condition.client.view.html',
         controller: 'ProtocolSiteConditionsController',
-        controllerAs: 'sc',
+        controllerAs: 'vm',
         data: {
           roles: ['team lead', 'team member', 'admin'],
           pageTitle: 'Protocol Site Conditions Create'
@@ -37,7 +38,7 @@
         url: '/:protocolSiteConditionId/edit',
         templateUrl: 'modules/protocol-site-conditions/client/views/form-protocol-site-condition.client.view.html',
         controller: 'ProtocolSiteConditionsController',
-        controllerAs: 'sc',
+        controllerAs: 'vm',
         data: {
           roles: ['team lead', 'team member', 'admin'],
           pageTitle: 'Edit Protocol Site Conditions'
@@ -47,7 +48,7 @@
         url: '/:protocolSiteConditionId',
         templateUrl: 'modules/protocol-site-conditions/client/views/view-protocol-site-condition.client.view.html',
         controller: 'ProtocolSiteConditionsController',
-        controllerAs: 'sc',
+        controllerAs: 'vm',
         data: {
           pageTitle: 'Protocol Site Condition'
         }

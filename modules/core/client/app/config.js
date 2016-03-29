@@ -15,8 +15,7 @@ var ApplicationConfiguration = (function () {
     'ngQuill', 
     'iso.directives',
     'rt.select2',
-    'omr.angularFileDnD',
-    'dndLists'];
+    'omr.angularFileDnD'];
 
   // Add a new vertical module
   var registerModule = function (moduleName, dependencies) {

@@ -10,6 +10,7 @@
   function routeConfig($stateProvider) {
     $stateProvider
       .state('curriculum', {
+        abstract: true,
         url: '/curriculum',
         template: '<ui-view/>'
       });

@@ -9,13 +9,13 @@
   function ngThumb($window) {
     var helper = {
       support: !!($window.FileReader && $window.CanvasRenderingContext2D),
-      isFile: function(item) {
-        return angular.isObject(item) && item instanceof $window.File;
-      },
-      isImage: function(file) {
-        var type = '|' + file.type.slice(file.type.lastIndexOf('/') + 1) + '|';
-        return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-      }
+        isFile: function(item) {
+          return angular.isObject(item) && item instanceof $window.File;
+        },
+        isImage: function(file) {
+          var type =  '|' + file.type.slice(file.type.lastIndexOf('/') + 1) + '|';
+            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+        }
     };
 
     return {
@@ -23,30 +23,31 @@
       template: '<canvas/>',
       link: function(scope, element, attributes) {
         if (!helper.support) return;
-        var vm = this;
-        var params = scope.$eval(attributes.ngThumb);
+          var vm = this;
 
-        if (!helper.isFile(params.file)) return;
-        if (!helper.isImage(params.file)) return;
+          var params = scope.$eval(attributes.ngThumb);
 
-        var canvas = element.find('canvas');
-        var reader = new FileReader();
+          if (!helper.isFile(params.file)) return;
+          if (!helper.isImage(params.file)) return;
 
-        reader.onload = onLoadFile;
-        reader.readAsDataURL(params.file);
+          var canvas = element.find('canvas');
+          var reader = new FileReader();
 
-        function onLoadFile(event) {
-          var img = new Image();
-          img.onload = onLoadImage;
-          img.src = event.target.result;
-        }
+          reader.onload = onLoadFile;
+          reader.readAsDataURL(params.file);
 
-        function onLoadImage() {
-          var width = params.width || vm.width / vm.height * params.height;
-          var height = params.height || vm.height / vm.width * params.width;
-          canvas.attr({ width: width, height: height });
-          canvas[0].getContext('2d').drawImage(vm, 0, 0, width, height);
-        }
+          function onLoadFile(event) {
+            var img = new Image();
+            img.onload = onLoadImage;
+            img.src = event.target.result;
+          }
+
+          function onLoadImage() {
+            var width = params.width || vm.width / vm.height * params.height;
+            var height = params.height || vm.height / vm.width * params.width;
+            canvas.attr({ width: width, height: height });
+            canvas[0].getContext('2d').drawImage(vm, 0, 0, width, height);
+          }
       }
     };
   }
